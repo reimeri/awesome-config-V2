@@ -1,11 +1,3 @@
---[[
-
-     Licensed under GNU General Public License v2
-      * (c) 2013, Luca CPZ
-      * (c) 2013, Rman
-
---]]
-
 local awful    = require("awful")
 local naughty  = require("naughty")
 local wibox    = require("wibox")
@@ -14,9 +6,6 @@ local math     = math
 local string   = string
 local type     = type
 local tonumber = tonumber
-
--- PulseAudio volume bar
--- lain.widget.pulsebar
 
 local function factory(args)
     local pulsebar = {
