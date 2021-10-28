@@ -1,4 +1,3 @@
-
 --[[
 
      Licensed under GNU General Public License v2
@@ -29,7 +28,7 @@ local function factory(args)
         },
 
         _current_level = 0,
-        _mute          = "no",
+        _mute          = false,
         device         = "N/A"
     }
 
@@ -51,8 +50,6 @@ local function factory(args)
     pulsebar.colors              = args.colors or pulsebar.colors
     pulsebar.followtag           = args.followtag or false
     pulsebar.notification_preset = args.notification_preset
-    pulsebar.devicetype          = args.devicetype or "sink"
-    pulsebar.cmd                 = args.cmd or "pacmd list-" .. pulsebar.devicetype .. "s | sed -n -e '/*/,$!d' -e '/index/p' -e '/base volume/d' -e '/volume:/p' -e '/muted:/p' -e '/device\\.string/p'"
 
     if not pulsebar.notification_preset then
         pulsebar.notification_preset = {
@@ -106,44 +103,35 @@ local function factory(args)
     --- FUNTIONALITY
 
     function pulsebar.update(callback)
-        pulsebar.async({ awful.util.shell, "-c", type(pulsebar.cmd) == "string" and pulsebar.cmd or pulsebar.cmd() },
+        pulsebar.async({ awful.util.shell, "-c", "pamixer --get-volume" },
         function(s)
-            volume_now = {
-                index  = string.match(s, "index: (%S+)") or "N/A",
-                device = string.match(s, "device.string = \"(%S+)\"") or "N/A",
-                muted  = string.match(s, "muted: (%S+)") or "N/A"
-            }
+            local volume = s
 
-            pulsebar.device = volume_now.index
-
-            local ch = 1
-            volume_now.channel = {}
-            for v in string.gmatch(s, ":.-(%d+)%%") do
-              volume_now.channel[ch] = v
-              ch = ch + 1
-            end
-
-            volume_now.left  = volume_now.channel[1] or "N/A"
-            volume_now.right = volume_now.channel[2] or "N/A"
-
-            local volu = volume_now.left
-            local mute = volume_now.muted
-
-            if volu:match("N/A") or mute:match("N/A") then return end
-
-            if volu ~= pulsebar._current_level or mute ~= pulsebar._mute then
-                pulsebar._current_level = tonumber(volu)
+            if volume ~= pulsebar._current_level then
+                pulsebar._current_level = tonumber(volume)
                 pulsebar.bar:set_value(pulsebar._current_level / 100)
-                if pulsebar._current_level == 0 or mute == "yes" then
+	        pulsebar.tooltip:set_text(string.format("Volume: %d%%", volume))
+	        pulsebar.bar.color = pulsebar.colors.unmute
+	        pulsebar.bar.background_color = pulsebar.colors.background
+
+                settings()
+
+                if type(callback) == "function" then callback() end
+            end
+        end)
+        pulsebar.async({ awful.util.shell, "-c", "pamixer --get-mute" },
+        function(s)
+	    stringtoboolean = { ["true"]=true, ["false"]=false }
+            local mute = stringtoboolean[s]
+
+            if mute ~= pulsebar._mute then
+                if mute == true then
                     pulsebar._mute = mute
                     pulsebar.tooltip:set_text ("[muted]")
                     pulsebar.bar.color = pulsebar.colors.mute
                     pulsebar.bar.background_color = pulsebar.colors.mute_background
                 else
                     pulsebar._mute = "no"
-                    pulsebar.tooltip:set_text(string.format("%s %s: %s", pulsebar.devicetype, pulsebar.device, volu))
-                    pulsebar.bar.color = pulsebar.colors.unmute
-                    pulsebar.bar.background_color = pulsebar.colors.background
                 end
 
                 settings()
@@ -153,13 +141,27 @@ local function factory(args)
         end)
     end
 
+    function pulsebar.increasevol()
+        pulsebar.async({ awful.util.shell, "-c", "pamixer -i 1" },
+	function(s)
+	     pulsebar.notify()
+	end)
+    end
+
+    function pulsebar.decreasevol()
+        pulsebar.async({ awful.util.shell, "-c", "pamixer -d 1" },
+	function(s)
+	     pulsebar.notify()
+	end)
+    end
+
     function pulsebar.notify()
         pulsebar.update(function()
             local preset = pulsebar.notification_preset
 
-            preset.title = string.format("%s %s - %s%%", pulsebar.devicetype, pulsebar.device, pulsebar._current_level)
+            preset.title = string.format("Volume: %s%%", pulsebar._current_level)
 
-            if pulsebar._mute == "yes" then
+            if pulsebar._mute == true then
                 preset.title = preset.title .. " muted"
             end
 
@@ -199,7 +201,7 @@ local function factory(args)
         end)
     end
 
-    pulsebar.newtimer(string.format("pulsebar-%s-%s", pulsebar.devicetype, pulsebar.device), timeout, pulsebar.update)
+    pulsebar.newtimer("Pulsebar", timeout, pulsebar.update)
 
     return pulsebar
 end

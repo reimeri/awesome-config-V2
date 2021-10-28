@@ -2,6 +2,7 @@ local gears = require("gears")
 local awful = require("awful")
 local wibox = require("wibox")
 local beautiful = require("beautiful")
+local pulsebar = require("utils.pulse")
 
 local screen_config = {}
 
@@ -18,6 +19,17 @@ function screen_config:init(args)
     -- {{{ Wibar
     -- Create a textclock widget
     mytextclock = wibox.widget.textclock()
+
+    -- Volume
+    myvolume = pulsebar()
+
+    local volumebuttons = gears.table.join(
+        awful.button({ }, 5, function() myvolume.decreasevol() end),
+	awful.button({ }, 4, function() myvolume.increasevol() end)
+    )
+
+    myvolume.bar:buttons(volumebuttons)
+    myvolume.notify()
     
     -- Create a wibox for each screen and add it
     local taglist_buttons = gears.table.join(
@@ -113,6 +125,7 @@ function screen_config:init(args)
                 layout = wibox.layout.fixed.horizontal,
                 mykeyboardlayout,
                 wibox.widget.systray(),
+		myvolume.bar,
                 mytextclock,
                 s.mylayoutbox,
             },
