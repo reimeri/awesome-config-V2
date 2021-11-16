@@ -109,6 +109,9 @@ function screen_config:init(args)
             filter  = awful.widget.tasklist.filter.currenttags,
             buttons = tasklist_buttons
         }
+
+	-- Create system tray widget
+	s.mysystray = wibox.widget.systray()
     
         -- Create the wibox
         s.mywibox = awful.wibar({ position = "bottom", screen = s })
@@ -118,16 +121,16 @@ function screen_config:init(args)
             layout = wibox.layout.align.horizontal,
             { -- Left widgets
                 layout = wibox.layout.fixed.horizontal,
+                s.mylayoutbox,
                 s.mytaglist,
             },
             s.mytasklist, -- Middle widget
             { -- Right widgets
                 layout = wibox.layout.fixed.horizontal,
                 mykeyboardlayout,
-                wibox.widget.systray(),
 		myvolume.bar,
                 mytextclock,
-                s.mylayoutbox,
+		s.mysystray,
             },
         }
     end)

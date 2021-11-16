@@ -96,7 +96,7 @@ function keymap:init(args)
         awful.key({ modkey },            "space",     function()
 		s = awful.screen.focused()
 		bar = menubar
-		bar.geometry = {x = 0, y = s.geometry.height - 32}
+		bar.geometry = {x = s.geometry.x, y = s.geometry.height - 32}
 		bar.show() 
 	end,
                   {description = "show the menubar", group = "launcher"})
