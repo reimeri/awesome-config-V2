@@ -99,7 +99,11 @@ function keymap:init(args)
 		bar.geometry = {x = s.geometry.x, y = s.geometry.height - 32}
 		bar.show() 
 	end,
-                  {description = "show the menubar", group = "launcher"})
+                  {description = "show the menubar", group = "launcher"}),
+
+	-- File manager
+        awful.key({ modkey },            "r",     function() awful.spawn(args.terminal .. " -e " .. args.fileManager) end,
+                  {description = "Open terminal file manager (ranger)", group = "File manger"})
     )
     
     keymap.clientkeys = gears.table.join(

@@ -20,6 +20,7 @@ beautiful.init(gears.filesystem.get_configuration_dir() .. "themes/multicolor/th
 terminal = "alacritty"
 editor = os.getenv("EDITOR") or "nvim"
 editor_cmd = terminal .. " -e " .. editor
+fileManager = "ranger"
 modkey = "Mod4"
 
 local screen_config = require("screen")
@@ -29,7 +30,7 @@ local menu = require("menu")
 menu:init({})
 
 local keymap = require("keymap")
-keymap:init({terminal = terminal, mymainmenu = menu.mymainmenu})
+keymap:init({terminal = terminal, mymainmenu = menu.mymainmenu, fileManager = fileManager})
 
 local rules = require("rules")
 rules:init({clientkeys = keymap.clientkeys, clientbuttons = keymap.clientbuttons})
