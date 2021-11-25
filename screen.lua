@@ -5,6 +5,7 @@ local beautiful = require("beautiful")
 local pulsebar = require("utils.pulse")
 
 local screen_config = {}
+local i = 1
 
 function screen_config:init(args)
     -- Table of layouts to cover with awful.layout.inc, order matters.
@@ -72,7 +73,8 @@ function screen_config:init(args)
             if type(wallpaper) == "function" then
                 wallpaper = wallpaper(s)
             end
-            gears.wallpaper.maximized(wallpaper, s, true)
+            gears.wallpaper.maximized(wallpaper[i], s, true)
+	    i = i + 1
         end
     end
     
