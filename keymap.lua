@@ -103,7 +103,11 @@ function keymap:init(args)
 
 	-- File manager
         awful.key({ modkey },            "r",     function() awful.spawn(args.terminal .. " -e " .. args.fileManager) end,
-                  {description = "Open terminal file manager (ranger)", group = "File manger"})
+                  {description = "Open terminal file manager (ranger)", group = "File manger"}),
+
+	-- Screen capture
+        awful.key({ modkey, "Shift" },            "s",     function() awful.spawn("flameshot gui") end,
+                  {description = "Take screenshot (flameshot)", group = "Screenshot"})
     )
     
     keymap.clientkeys = gears.table.join(
