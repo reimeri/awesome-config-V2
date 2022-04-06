@@ -9,8 +9,8 @@ local theme                                     = {}
 theme.confdir                                   = os.getenv("HOME") .. "/.config/awesome/themes/multicolor"
 theme.images					= os.getenv("HOME") .. "/Pictures/Wallpapers"
 theme.wallpaper                                 = {
-	theme.images .. "/Artist/Neco/Neco_combined.png",
-	theme.images .. "/Character/Satania_cat.png"
+	theme.images .. "/Misc/pine_tree.jpg",
+	theme.images .. "/Space/pluto.jpg"
 }
 theme.font                                      = "VT323 14"
 theme.menu_bg_normal                            = "#000000"
