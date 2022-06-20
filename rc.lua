@@ -31,7 +31,7 @@ local menu = require("menu")
 menu:init({})
 
 local keymap = require("keymap")
-keymap:init({terminal = terminal, mymainmenu = menu.mymainmenu, fileManager = fileManager})
+keymap:init({terminal = terminal, mymainmenu = menu.mymainmenu, fileManager = fileManager, calculator = calculator})
 
 local rules = require("rules")
 rules:init({clientkeys = keymap.clientkeys, clientbuttons = keymap.clientbuttons})
