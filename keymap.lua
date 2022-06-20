@@ -101,6 +101,10 @@ function keymap:init(args)
 	end,
                   {description = "show the menubar", group = "launcher"}),
 
+	-- Calculator
+        awful.key({ modkey },            "c",     function() awful.spawn(args.terminal .. " -e " .. args.calculator) end,
+                  {description = "Open terminal calculator (octave)", group = "CLI utils"}),
+
 	-- File manager
         awful.key({ modkey },            "r",     function() awful.spawn(args.terminal .. " -e " .. args.fileManager) end,
                   {description = "Open terminal file manager (ranger)", group = "File manger"}),

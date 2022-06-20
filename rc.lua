@@ -21,6 +21,7 @@ terminal = "alacritty"
 editor = os.getenv("EDITOR") or "nvim"
 editor_cmd = terminal .. " -e " .. editor
 fileManager = "ranger"
+calculator = "octave"
 modkey = "Mod4"
 
 local screen_config = require("screen")
