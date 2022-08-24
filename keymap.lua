@@ -55,7 +55,7 @@ function keymap:init(args)
                   {description = "focus the previous screen", group = "screen"}),
     
         -- Standard program
-        awful.key({ modkey,           }, "Return", function () awful.spawn(args.terminal .. " -e nu") end,
+        awful.key({ modkey,           }, "Return", function () awful.spawn(args.terminal) end,
                   {description = "open a terminal", group = "launcher"}),
         awful.key({ modkey, "Control" }, "r", awesome.restart,
                   {description = "reload awesome", group = "awesome"}),
