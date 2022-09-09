@@ -63,7 +63,19 @@ function screen_config:init(args)
                                                   end
                                               end),
     		     awful.button({ }, 2, function(c)
-    					      c:kill()				                                         end))
+    					      c:kill() end))
+
+    local function file_exists(name)
+       local f = io.open(name,"r")
+       if f ~= nil then
+           io.close(f)
+           return true
+       else 
+           return false 
+       end
+    end
+
+    local image_extensions = {".jpg", ".jpeg", ".png"}
     
     local function set_wallpaper(s)
         -- Wallpaper
@@ -73,7 +85,15 @@ function screen_config:init(args)
             if type(wallpaper) == "function" then
                 wallpaper = wallpaper(s)
             end
-            gears.wallpaper.maximized(wallpaper[i], s, true)
+            local image_path_with_extension = ""
+            for _, extension in ipairs(image_extensions) do
+                path = wallpaper[i] .. extension
+                if file_exists(path) then
+                    image_path_with_extension = path
+                    break
+                end
+            end
+            gears.wallpaper.maximized(image_path_with_extension, s, true)
 	    i = i + 1
         end
     end
