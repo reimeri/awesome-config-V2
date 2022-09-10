@@ -93,7 +93,7 @@ function screen_config:init(args)
                     break
                 end
             end
-            gears.wallpaper.maximized(image_path_with_extension, s, true)
+            gears.wallpaper.maximized(image_path_with_extension, s)
 	    i = i + 1
         end
     end
